@@ -1,39 +1,23 @@
-<h2>Agregar Producto</h2>
+<!-- realTimeProducts.handlebars -->
+<h2>Lista de Productos en Tiempo Real</h2>
 
-<form id="myForm">
+<ul id="productList">
+  {{#each products}}
+    <li>{{this.name}} - ${{this.price}}</li>
+  {{/each}}
+</ul>
+
+<form id="productForm">
   Nombre: <input type="text" name="name">
-  <br>
   Precio: <input type="number" name="price">
-  <br>
-  <button type="submit">Agregar</button>
+  <button type="submit">Agregar Producto</button>
 </form>
-
-<hr>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Name</th>
-      <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody id="tbody">
-    {{#each products}}
-    <tr>
-      <th scope="row">{{this.id}}</th>
-      <td>{{this.name}}</td>
-      <td>{{this.price}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
 
-  document.getElementById('myForm').onsubmit = (e) => {
+  document.getElementById('productForm').onsubmit = (e) => {
     e.preventDefault();
 
     const name = document.querySelector('input[name=name]').value;
@@ -42,21 +26,19 @@
     const product = { name, price };
     socket.emit('new-product', product);
   };
-    socket.on('connected', () => {
-    console.log('Cliente conectado'); // Mostrar mensaje en la consola del navegador
+
+  socket.on('connected', () => {
+    console.log('Cliente conectado');
   });
-  socket.on('reload-table', (products) => {
-    const tbody = document.getElementById('tbody');
-    let html = '';
+
+  socket.on('reload-list', (products) => {
+    const productList = document.getElementById('productList');
+    productList.innerHTML = '';
 
     products.forEach((product) => {
-      html += `<tr>
-        <th scope="row">${product.id}</th>
-        <td>${product.name}</td>
-        <td>${product.price}</td>
-      </tr>`;
+      const li = document.createElement('li');
+      li.textContent = `${product.name} - $${product.price}`;
+      productList.appendChild(li);
     });
-
-    tbody.innerHTML = html;
   });
 </script>

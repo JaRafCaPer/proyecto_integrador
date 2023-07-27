@@ -1,8 +1,9 @@
 import { Router } from "express";
 import ProductModel from '../DAO/mongoManager/models/product.model.js'
 
+
 const router = Router()
-const productManager = new ProductModel()
+
 
 router.get('/', async (req, res) => {
     const products = await ProductModel.find()
@@ -17,6 +18,10 @@ router.get('/products-realtime', async (req, res) => {
 router.get('/form-products', async (req, res) => {
     res.render('form', {})
 })
+
+router.get("/chat", (req, res) => {
+    res.render("chat");
+});
 
 router.post('/form-products', async (req, res) => {
     const data = req.body

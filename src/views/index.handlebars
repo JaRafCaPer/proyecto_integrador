@@ -1,7 +1,8 @@
-<h2>Mi tienda Virtual</h2>
+<!-- index.handlebars -->
+<h2>Lista de Productos</h2>
 
 <ul>
-    <li>
-        <a href="/products">Productos</a>
-    </li>
+  {{#each products}}
+    <li>{{this.name}} - ${{this.price}}</li>
+  {{/each}}
 </ul>

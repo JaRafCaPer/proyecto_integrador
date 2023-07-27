@@ -26,16 +26,21 @@ router.post('/', async (req, res) => {
     res.send(result)
 })
 
-router.post("/:idc/product/:idp", async (req, res) => {
-    try {
-        const idc = req.params.idc
-        const idp = req.params.idp
+router.post("/:cid/product/:pid", async (req, res) => {
+  try {
+      const cid = req.params.cid;
+      const pid = req.params.pid;
       const quantity = req.body.quantity;
-      const updatedCart = await CartModel.add(cid, pid, quantity);
+
+      const cart = await CartModel.findById(cid);
+      cart.products.push({ product: pid, quantity });
+      const updatedCart = await cart.save();
+
       res.json(updatedCart);
-    } catch (error) {
+  } catch (error) {
       res.status(500).json({ error: error.message });
-    }
-  });
+  }
+});
+
 
 export default router

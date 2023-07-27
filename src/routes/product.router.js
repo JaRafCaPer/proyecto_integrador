@@ -21,17 +21,22 @@ router.get("/:pid", async (req, res) => {
   router.put('/:pid', async (req, res) => {
     const { pid } = req.params;
     const updatedParams = req.body;
-    if (!pid) {
-        return res.status(404).send({ message: "Product not found" });
-      }
+    console.log("Product ID:", pid);
+    console.log("Updated Params:", updatedParams);
     try {
-      const result = await ProductModel.findByIdAndUpdate({pid}, {updatedParams} );
+      const result = await ProductModel.findByIdAndUpdate(
+        pid,
+        updatedParams,
+        { new: true } // This option returns the updated document
+      );
+      console.log("Updated Product:", result);
       res.send(result);
       console.log('Product updated successfully');
     } catch (error) {
       res.status(404).json({ error: error.message });
     }
   });
+  
 
 
 router.post('/', async (req, res) => {
