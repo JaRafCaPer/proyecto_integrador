@@ -7,7 +7,8 @@ import cartRouter from './routes/cart.router.js'
 import viewsRouter from './routes/views.router.js'
 import __dirname from './utils.js'
 import MessageModel from "../src/DAO/mongoManager/models/message.model.js"
-
+import productModel from './DAO/mongoManager/models/product.model.js'
+ 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -25,9 +26,18 @@ const runServer = () => {
     const httpServer = app.listen(8080, () => console.log('Listening...'))
     const io = new Server(httpServer)
 
+    io.on('connection', socket => {
+        socket.on('new-product', async data => {
+            
+            await productModel.create(data)
+            const products = await productModel.find().lean().exec()
+            io.emit('reload-table', products)
+        })
+    })
+
+
     io.on("connection", (socket) => {
         console.log("Nuevo cliente conectado");
-
         socket.on("new-message", async (data) => {
             try {
                 const { user, message } = data;
@@ -52,9 +62,10 @@ mongoose.connect('mongodb+srv://caballeroperezjavier:prueba2023@ecommerce.0mdas1
 })
     .then(() => {
         console.log('DB connected!!')
-        runServer()
+        
     })
     .catch(e => console.log(`Can't connect to DB`))
+    runServer()
 
 
 

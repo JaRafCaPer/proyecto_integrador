@@ -9,7 +9,11 @@
 
 <form id="productForm">
   Nombre: <input type="text" name="name">
+  Imagen: <input type="text" name="image">
+  Descripcion: <input type="text" name="description">
   Precio: <input type="number" name="price">
+  Status: <input type="text" name="status">
+  Stock: <input type="number" name="stock">
   <button type="submit">Agregar Producto</button>
 </form>
 
@@ -37,7 +41,7 @@
 
     products.forEach((product) => {
       const li = document.createElement('li');
-      li.textContent = `${product.name} - $${product.price}`;
+      li.textContent = `${name} - $${price}`;
       productList.appendChild(li);
     });
   });

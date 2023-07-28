@@ -6,12 +6,13 @@ const router = Router()
 
 
 router.get('/', async (req, res) => {
-    const products = await ProductModel.find()
-    res.render('products', { products })
+    const products = await ProductModel.find().lean().exec()
+    res.render('products', {products })
 })
 
-router.get('/products-realtime', async (req, res) => {
-    const products = await ProductModel.find()
+router.get('/realtimeproducts', async (req, res) => {
+    console.log("get products")
+    const products = await ProductModel.find().lean().exec()
     res.render('products_realtime', { products })
 })
 
