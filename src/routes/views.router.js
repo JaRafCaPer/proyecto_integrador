@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductModel from '../DAO/mongoManager/models/product.model.js'
+import messageModel from "../DAO/mongoManager/models/message.model.js";
 
 
 const router = Router()
@@ -20,8 +21,13 @@ router.get('/form-products', async (req, res) => {
     res.render('form', {})
 })
 
-router.get("/chat", (req, res) => {
-    res.render("chat");
+router.get('/chat', async (req, res) => {
+    try {
+        const messages = await messageModel.find().lean().exec();
+        res.render('chat', { messages });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 router.post('/form-products', async (req, res) => {
